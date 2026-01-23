@@ -19,6 +19,7 @@
 - [x] **Loading States:** Disable buttons while submitting to prevent double clicks.
 
 ## 3. 🚀 Phase 3: Growth Features
+- [x] **Security & Validation:** Input sanitization, password policies, error handling.
 - [ ] **Themes:** Allow users to pick background colors/themes.
 - [ ] **Social Login:** Google/GitHub Auth.
 - [ ] **Better Analytics:** Visual charts in dashboard.

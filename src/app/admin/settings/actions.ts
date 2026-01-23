@@ -67,3 +67,29 @@ export async function updateProfile(formData: FormData) {
   revalidatePath(`/${username}`) // Para que se vea en el perfil público
   redirect('/admin')
 }
+
+
+
+export async function incrementClick(blockId: string) {
+    const supabase = await createClient()
+    
+    // Usamos rpc (remote procedure call) o un update simple.
+    // Como es un contador simple, hacemos un update sumando 1.
+    
+    // OJO: En una app con mil usuarios por segundo esto se hace distinto,
+    // pero para MVP esto funciona perfecto.
+    
+    // 1. Leemos el valor actual (hack rápido)
+    const { data: block } = await supabase
+      .from('blocks')
+      .select('clicks')
+      .eq('id', blockId)
+      .single()
+      
+    if (block) {
+      await supabase
+          .from('blocks')
+          .update({ clicks: block.clicks + 1 })
+          .eq('id', blockId)
+    }
+  }

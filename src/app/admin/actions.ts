@@ -38,3 +38,22 @@ export async function createBlock(formData: FormData) {
   // 4. Refrescar la pantalla para ver el bloque nuevo
   revalidatePath('/admin')
 }
+
+export async function incrementClick(blockId: string) {
+  const supabase = await createClient()
+  
+  // 1. Leemos el valor actual
+  const { data: block } = await supabase
+    .from('blocks')
+    .select('clicks')
+    .eq('id', blockId)
+    .single()
+    
+  if (block) {
+    // 2. Sumamos 1
+    await supabase
+        .from('blocks')
+        .update({ clicks: block.clicks + 1 })
+        .eq('id', blockId)
+  }
+}

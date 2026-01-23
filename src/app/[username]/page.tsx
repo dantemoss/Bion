@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ExternalLink, Github, Youtube } from "lucide-react";
 
+export const dynamic = "force-dynamic";
 // Mapeo de iconos según el tipo de bloque
 const iconMap: Record<string, any> = {
   link: ExternalLink,

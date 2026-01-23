@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import { signOut } from "./actions";
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import { Settings, ExternalLink } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -13,6 +13,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (error || !user) {
     redirect("/login");
+  }
+
+  // Verificar si el usuario tiene perfil con username
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", user.id)
+    .single();
+
+  // Si no tiene username, redirigir a onboarding
+  if (!profile?.username) {
+    redirect("/onboarding");
   }
 
   return (
@@ -26,16 +38,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-xs text-zinc-500 font-mono hidden sm:block">
-              {user.email}
-            </span>
+            <Link 
+              href={`/${profile.username}`} 
+              target="_blank"
+              className="text-xs text-zinc-500 font-mono hidden sm:flex items-center gap-1 hover:text-zinc-300 transition-colors"
+            >
+              @{profile.username}
+              <ExternalLink className="w-3 h-3" />
+            </Link>
 
             <Link href="/admin/settings">
               <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-zinc-800">
                 <Settings className="w-5 h-5" />
               </Button>
             </Link>
-            
+
             <form action={signOut}>
               <Button variant="outline" size="sm" className="h-8 border-zinc-700 hover:bg-zinc-800 text-zinc-300">
                 Salir

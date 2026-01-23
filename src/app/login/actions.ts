@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { headers } from 'next/headers'
 
 // Sanitizar input - remover espacios y caracteres peligrosos
 function sanitizeEmail(email: string): string {
@@ -104,4 +105,31 @@ export async function signup(formData: FormData) {
 
   revalidatePath('/', 'layout')
   redirect('/admin')
+}
+
+export async function signInWithGoogle() {
+  const supabase = await createClient()
+  const headersList = await headers()
+  const origin = headersList.get('origin') || headersList.get('host') || ''
+  
+  // Construir la URL base correctamente
+  const baseUrl = origin.startsWith('http') ? origin : `https://${origin}`
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${baseUrl}/auth/callback`,
+    },
+  })
+
+  if (error) {
+    console.error('Google OAuth error:', error.message)
+    return { error: 'Error al conectar con Google' }
+  }
+
+  if (data.url) {
+    redirect(data.url)
+  }
+
+  return { error: 'No se pudo iniciar el login con Google' }
 }

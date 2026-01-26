@@ -7,11 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { LayoutSelector } from "@/components/layout-selector"
+import { type LayoutType, defaultLayout } from "@/lib/layouts"
 
 interface Profile {
   avatar_url?: string | null
   full_name?: string | null
   username?: string | null
+  layout?: string | null
 }
 
 interface SettingsFormProps {
@@ -20,9 +23,14 @@ interface SettingsFormProps {
 
 export function SettingsForm({ profile }: SettingsFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [layout, setLayout] = useState<LayoutType>(
+    (profile?.layout as LayoutType) || defaultLayout
+  )
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true)
+    // Agregar el layout al formData
+    formData.set('layout', layout)
     try {
       const result = await updateProfile(formData)
       if (result?.error) {
@@ -88,6 +96,16 @@ export function SettingsForm({ profile }: SettingsFormProps) {
           />
         </div>
         <p className="text-xs text-zinc-500">Cuidado: Si cambiás esto, tu link viejo va a dejar de funcionar.</p>
+      </div>
+
+      {/* Layout Selector */}
+      <div className="space-y-3">
+        <Label>Estilo de Layout</Label>
+        <LayoutSelector 
+          value={layout} 
+          onChange={setLayout} 
+          disabled={isLoading}
+        />
       </div>
 
       <div className="pt-4 flex justify-end gap-4">

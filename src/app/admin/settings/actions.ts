@@ -13,6 +13,7 @@ export async function updateProfile(formData: FormData) {
   // 2. Obtener datos del form
   const fullName = formData.get('fullName') as string
   const username = formData.get('username') as string
+  const layout = formData.get('layout') as string
   const file = formData.get('avatar') as File
 
   let avatarUrl = null
@@ -43,6 +44,7 @@ export async function updateProfile(formData: FormData) {
   const updates: Record<string, unknown> = {
     full_name: fullName,
     username: username,
+    layout: layout || 'list',
     updated_at: new Date().toISOString(),
   }
 

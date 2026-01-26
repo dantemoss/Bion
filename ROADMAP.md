@@ -44,7 +44,7 @@
 
 ### 4.2 Tipografía y Layout
 - [ ] **Font Selector:** Google Fonts integration (curated selection: Inter, Poppins, Roboto, etc.).
-- [ ] **Layout Options:** List view, grid view, bento-style layout.
+- [x] **Layout Options:** List view, grid view, bento-style layout.
 - [ ] **Spacing:** Compact, normal, spacious modes.
 
 ### 4.3 Fondos Avanzados

@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# security documentation (contains sensitive info)
+SECURITY.md
+SECURITY_NOTES.md
+*.security.md

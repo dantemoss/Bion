@@ -24,6 +24,26 @@
 - [x] **Onboarding:** Username selection flow for new users.
 - [x] **SEO:** OpenGraph tags for public profiles.
 
+### 3.1 Security Enhancements (Completed)
+- [x] **Zod Validation:** Schema-based validation for all user inputs.
+- [x] **XSS Protection:** Sanitization of dangerous patterns (`<script>`, event handlers, etc.).
+- [x] **URL Validation:** Strict URL validation (only http/https protocols).
+- [x] **Ownership Verification:** Double-check ownership before modify/delete operations.
+- [x] **Input Sanitization:** Helper functions for string and URL sanitization.
+- [x] **Security Documentation:** Comprehensive security notes (in `.gitignore`).
+
+### 3.2 Security Improvements (Future)
+- [ ] **Rate Limiting:** Implement request limits per user/IP to prevent abuse.
+  - [ ] Create block: 10 per minute
+  - [ ] Update block: 20 per minute
+  - [ ] Delete block: 5 per minute
+  - [ ] Increment clicks: 100 per minute
+- [ ] **Content Security Policy (CSP):** Add strict security headers.
+- [ ] **HTTPS Enforcement:** Force HTTPS redirects in production.
+- [ ] **Security Testing:** Automated security tests for validations.
+- [ ] **Audit Logs:** Log all security-relevant actions for traceability.
+- [ ] **Periodic Security Audits:** Regular code reviews and penetration testing.
+
 ### 3.1 Better Analytics (Log-based System)
 - [ ] **Database Schema Shift:** Create `events` table in Supabase for log-based analytics. Fields: `id`, `block_id`, `created_at`, `browser`, `device_type`, `os`, `country` (optional).
 - [ ] **Data Capture:** Update `incrementClick` Server Action to insert into `events` table, parsing User-Agent headers to detect device/browser.
@@ -81,7 +101,7 @@
 - [ ] **Password Protected Links:** Private links with password.
 - [ ] **Email Collection:** Capture visitor emails.
 - [ ] **Integrations:** Spotify, YouTube, Instagram embeds.
-
+- [ ] **Tipografias:** Mejorar las del plan FREE y pensar para el plan PRO.
 
 ## Librerias de componentes posibles para usar: 
 https://tailark.com/ components

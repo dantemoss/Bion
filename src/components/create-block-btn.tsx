@@ -34,13 +34,19 @@ export function CreateBlockBtn() {
     try {
       // Agregar el tipo detectado al formData
       formData.set("type", detectedPlatform)
-      await createBlock(formData)
-      toast.success("Bloque creado correctamente")
-      setOpen(false)
-      setUrl("")
-      setBlockType("link")
-    } catch {
-      toast.error("Error al crear el bloque")
+      const result = await createBlock(formData)
+      
+      if (result?.error) {
+        toast.error(result.error)
+      } else {
+        toast.success("Bloque creado correctamente")
+        setOpen(false)
+        setUrl("")
+        setBlockType("link")
+      }
+    } catch (error) {
+      console.error("Error al crear el bloque:", error)
+      toast.error("Error inesperado al crear el bloque")
     } finally {
       setIsLoading(false)
     }

@@ -14,7 +14,7 @@ interface Block {
 
 interface StaticBlockProps {
   block: Block
-  variant?: "dark" | "silver" | "white"
+  variant?: "dark" | "silver"
 }
 
 export function StaticBlock({ block, variant = "dark" }: StaticBlockProps) {

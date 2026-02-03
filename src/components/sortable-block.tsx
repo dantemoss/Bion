@@ -20,7 +20,7 @@ interface Block {
 
 interface SortableBlockProps {
   block: Block
-  variant?: "dark" | "silver" | "white"
+  variant?: "dark" | "silver"
 }
 
 export function SortableBlock({ block, variant = "dark" }: SortableBlockProps) {

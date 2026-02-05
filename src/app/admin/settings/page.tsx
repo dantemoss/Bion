@@ -1,6 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { SettingsForm } from "@/components/settings-form";
+import { GlassProfileSettingsCard } from "@/components/tripled/glass-profile-settings-card";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -14,18 +13,8 @@ export default async function SettingsPage() {
     .single();
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <Card className="bg-zinc-900 border-zinc-800 text-zinc-100">
-        <CardHeader>
-          <CardTitle>Configuración de Perfil</CardTitle>
-          <CardDescription>
-            Actualizá tu información pública.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SettingsForm profile={profile} />
-        </CardContent>
-      </Card>
+    <div className="flex justify-center items-start min-h-screen py-8">
+      <GlassProfileSettingsCard profile={profile} />
     </div>
   );
 }

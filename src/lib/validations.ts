@@ -145,3 +145,116 @@ export function sanitizeUrl(url: string | null | undefined): string | null {
     return null
   }
 }
+
+/**
+ * Schema de validación para actualizar perfil de usuario
+ */
+export const profileSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, "El nombre completo es requerido")
+    .max(100, "El nombre no puede exceder 100 caracteres")
+    .trim()
+    .refine(
+      (val) => {
+        // Sanitizar: remover caracteres peligrosos
+        const dangerousPatterns = [
+          /<script/i,
+          /javascript:/i,
+          /on\w+\s*=/i,
+          /<iframe/i,
+        ]
+        return !dangerousPatterns.some((pattern) => pattern.test(val))
+      },
+      {
+        message: "El nombre contiene caracteres no permitidos",
+      }
+    ),
+  username: z
+    .string()
+    .min(3, "El username debe tener al menos 3 caracteres")
+    .max(30, "El username no puede exceder 30 caracteres")
+    .trim()
+    .toLowerCase()
+    .refine(
+      (val) => /^[a-z0-9_-]+$/.test(val),
+      {
+        message: "El username solo puede contener letras minúsculas, números, guiones y guiones bajos",
+      }
+    ),
+  email: z
+    .string()
+    .email("Email inválido")
+    .max(255, "El email no puede exceder 255 caracteres")
+    .optional()
+    .or(z.literal("")),
+  phone: z
+    .string()
+    .max(20, "El teléfono no puede exceder 20 caracteres")
+    .refine(
+      (val) => {
+        if (!val || val.trim() === "") return true
+        // Permitir números, espacios, paréntesis, guiones y el símbolo +
+        return /^[\d\s()+-]+$/.test(val)
+      },
+      {
+        message: "El teléfono contiene caracteres no permitidos",
+      }
+    )
+    .optional()
+    .or(z.literal("")),
+  bio: z
+    .string()
+    .max(160, "La bio no puede exceder 160 caracteres")
+    .refine(
+      (val) => {
+        // Sanitizar: remover caracteres peligrosos
+        const dangerousPatterns = [
+          /<script/i,
+          /javascript:/i,
+          /on\w+\s*=/i,
+        ]
+        return !dangerousPatterns.some((pattern) => pattern.test(val))
+      },
+      {
+        message: "La bio contiene caracteres no permitidos",
+      }
+    )
+    .optional()
+    .or(z.literal("")),
+  notifications_enabled: z
+    .string()
+    .transform((val) => val === "true")
+    .pipe(z.boolean()),
+  newsletter_enabled: z
+    .string()
+    .transform((val) => val === "true")
+    .pipe(z.boolean()),
+})
+
+/**
+ * Schema de validación para archivos de imagen
+ */
+export const imageFileSchema = z.object({
+  size: z
+    .number()
+    .max(5 * 1024 * 1024, "La imagen no puede superar los 5MB"),
+  type: z
+    .string()
+    .refine(
+      (val) => val.startsWith("image/"),
+      {
+        message: "El archivo debe ser una imagen",
+      }
+    ),
+})
+
+/**
+ * Función helper para sanitizar nombres de archivo
+ */
+export function sanitizeFileName(fileName: string): string {
+  return fileName
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]/g, "_") // Reemplazar caracteres especiales
+    .slice(0, 255) // Limitar longitud
+}

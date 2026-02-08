@@ -1,8 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ProfileLayout } from "@/components/layouts";
-import { type LayoutType, defaultLayout } from "@/lib/layouts";
+import { PublicBentoGrid } from "@/components/public-profile/public-bento-grid";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -89,9 +88,6 @@ export default async function PublicProfilePage({
   // Filtrar solo bloques activos
   const activeBlocks = blocks?.filter(b => b.is_active !== false) || []
 
-  // Obtener layout del perfil (si existe) o usar el default
-  const layout = (profile.layout as LayoutType) || defaultLayout
-
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center py-16 px-4">
       
@@ -104,13 +100,13 @@ export default async function PublicProfilePage({
           </AvatarFallback>
         </Avatar>
         <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight">{profile.full_name || username}</h1>
-            <p className="text-zinc-500 text-sm font-mono">@{username}</p>
+          <h1 className="text-2xl font-bold tracking-tight">{profile.full_name || username}</h1>
+          <p className="text-zinc-500 text-sm font-mono">@{username}</p>
         </div>
       </div>
 
-      {/* BLOQUES CON LAYOUT DINÁMICO */}
-      <ProfileLayout layout={layout} blocks={activeBlocks} />
+      {/* BENTO GRID CON RICH MEDIA */}
+      <PublicBentoGrid blocks={activeBlocks} />
 
       {/* FOOTER */}
       <footer className="mt-20 text-zinc-600 text-xs">

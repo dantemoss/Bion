@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
@@ -14,10 +13,14 @@ import {
   Sidebar,
   SidebarBody,
   SidebarLink,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import { motion } from "framer-motion";
 
-export function AdminSidebar() {
+/** Contenido interno: debe estar dentro de Sidebar para usar useSidebar */
+function AdminSidebarContent() {
   const pathname = usePathname();
+  const { open, animate } = useSidebar();
 
   const links = [
     {
@@ -58,29 +61,43 @@ export function AdminSidebar() {
   ];
 
   return (
-    <Sidebar animate={true}>
-      <SidebarBody className="justify-between gap-10 bg-zinc-950 border-r border-zinc-800">
-        <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-          {/* Logo */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="h-6 w-6 bg-white rounded-md flex-shrink-0"></div>
-            <h2 className="font-bold text-lg tracking-tight text-white">Bion</h2>
-          </div>
+    <div className="flex flex-col flex-1 min-h-0">
+      {/* Logo: solo ícono cuando la sidebar está cerrada */}
+      <div className="flex items-center gap-3 mb-6 flex-shrink-0 overflow-hidden">
+        <img src="/logoBion.webp" alt="Bion" className="h-10 w-10 object-contain flex-shrink-0 rounded-md md:h-12 md:w-12" />
+        <motion.span
+          animate={{
+            display: animate ? (open ? "inline-block" : "none") : "inline-block",
+            opacity: animate ? (open ? 1 : 0) : 1,
+          }}
+          className="font-bold text-lg tracking-tight text-white whitespace-nowrap"
+        >
+          Bion
+        </motion.span>
+      </div>
 
-          {/* Links */}
-          <div className="mt-8 flex flex-col gap-2">
-            {links.map((link, idx) => (
-              <SidebarLink 
-                key={idx} 
-                link={link}
-                className={cn(
-                  "hover:bg-zinc-800/50 rounded-md px-2",
-                  pathname === link.href && "bg-zinc-800"
-                )}
-              />
-            ))}
-          </div>
-        </div>
+      {/* Links */}
+      <nav className="flex flex-col gap-1 flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        {links.map((link, idx) => (
+          <SidebarLink
+            key={idx}
+            link={link}
+            className={cn(
+              "hover:bg-zinc-800/50 rounded-md px-2",
+              pathname === link.href && "bg-zinc-800"
+            )}
+          />
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+export function AdminSidebar() {
+  return (
+    <Sidebar animate={true}>
+      <SidebarBody className="h-full flex flex-col bg-zinc-950 border-r border-zinc-800">
+        <AdminSidebarContent />
       </SidebarBody>
     </Sidebar>
   );

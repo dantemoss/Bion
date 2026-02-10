@@ -13,7 +13,7 @@ export default async function SettingsPage() {
     .single();
 
   return (
-    <div className="flex justify-center items-start min-h-screen py-8">
+    <div className="flex justify-center items-start w-full max-w-4xl mx-auto">
       <GlassProfileSettingsCard profile={profile} />
     </div>
   );

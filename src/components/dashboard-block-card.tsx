@@ -52,35 +52,11 @@ export function DashboardBlockCard({
     silver: "text-zinc-700",
   }
 
-  // Determinar si el logo necesita invertirse (logos oscuros en fondos oscuros)
-  // Detecta colores blancos, grises claros y colores con alta luminosidad
-  const isLightColor = (color: string): boolean => {
-    // Normalizar el color
-    const normalizedColor = color.toLowerCase().trim()
-    
-    // Verificar nombres de colores comunes
-    if (normalizedColor === "white" || normalizedColor === "#fff" || normalizedColor === "#ffffff") {
-      return true
-    }
-    
-    // Verificar colores grises claros y blancos en formato hex
-    if (normalizedColor.startsWith("#")) {
-      const hex = normalizedColor.replace("#", "")
-      const r = parseInt(hex.substring(0, 2), 16)
-      const g = parseInt(hex.substring(2, 4), 16)
-      const b = parseInt(hex.substring(4, 6), 16)
-      
-      // Calcular luminosidad (fórmula estándar)
-      const luminosity = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-      
-      // Si la luminosidad es mayor a 0.7, considerarlo claro
-      return luminosity > 0.7
-    }
-    
-    return false
+  // Logos monocromáticos por variante: Dark → blanco metálico, Silver → negro metálico
+  const logoMonochromeClasses = {
+    dark: "brightness-0 invert opacity-95 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
+    silver: "brightness-0 opacity-90 drop-shadow-[0_0_6px_rgba(0,0,0,0.3)]",
   }
-  
-  const needsInvert = variant === "dark" && isLightColor(brandColor)
 
   return (
     <motion.div
@@ -245,21 +221,23 @@ export function DashboardBlockCard({
         </div>
       </div>
 
-      {/* Bottom-right: Large logo on bottom edge */}
+      {/* Bottom-right: Large logo on bottom edge - monocromático por variante */}
       <div className="absolute bottom-0 right-2 z-0">
-        {/* Brand color glow */}
+        {/* Glow sutil según variante (blanco en dark, negro en silver) */}
         <div
-          className="absolute inset-0 w-24 h-24 rounded-full blur-3xl opacity-20 group-hover:opacity-35 transition-opacity duration-300"
-          style={{ backgroundColor: needsInvert ? "#ffffff" : brandColor }}
+          className={cn(
+            "absolute inset-0 w-24 h-24 rounded-full blur-3xl opacity-15 group-hover:opacity-25 transition-opacity duration-300",
+            variant === "dark" && "bg-white",
+            variant === "silver" && "bg-zinc-900"
+          )}
         />
         
-        {/* Logo - larger and on bottom with smart color adaptation */}
+        {/* Logo monocromático: Dark = blanco metálico, Silver = negro metálico */}
         <div
           className={cn(
             "relative w-32 h-32 flex items-center justify-center transition-transform duration-300 group-hover:scale-105",
-            needsInvert && "brightness-0 invert"
+            logoMonochromeClasses[variant]
           )}
-          style={{ color: brandColor }}
         >
           {icon}
         </div>

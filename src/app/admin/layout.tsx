@@ -31,7 +31,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex relative overflow-hidden">
+    <div className="h-screen bg-zinc-950 text-zinc-100 flex relative overflow-hidden">
       {/* Striped Pattern Background */}
       <StripedPattern 
         direction="right"
@@ -43,13 +43,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* SIDEBAR */}
       <AdminSidebar />
 
-      {/* CONTENIDO PRINCIPAL */}
-      <div className="flex-1 flex flex-col relative z-10">
+      {/* CONTENIDO PRINCIPAL: min-h-0 para que el main pueda hacer scroll */}
+      <div className="flex-1 flex flex-col min-h-0 relative z-10">
         {/* HEADER */}
         <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-50">
           <div className="px-6 h-16 flex justify-between items-center">
             <div className="flex items-center gap-2 lg:hidden">
-              <div className="h-6 w-6 bg-white rounded-md"></div>
+              <img src="/logoBion.webp" alt="Bion" className="h-6 w-6 object-contain rounded-md" />
               <h1 className="font-bold text-lg tracking-tight">Bion</h1>
             </div>
 
@@ -81,7 +81,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </header>
 
         {/* CONTENIDO */}
-        <main className="flex-1 p-6 py-10 overflow-y-auto">
+        <main className="flex-1 p-6 pt-6 pb-8 overflow-y-auto min-h-0">
           {children}
         </main>
       </div>

@@ -1,17 +1,28 @@
 "use client";
 
-import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { motion, useReducedMotion } from "framer-motion";
 import { UploadCloud, Loader2, X } from "lucide-react";
+import { SPINNING_TEXT_SET_LABELS, type SpinningTextSetKey } from "@/lib/spinning-text-presets";
 import { FormEvent, useState, useRef, ChangeEvent } from "react";
 import { updateProfile } from "@/app/admin/settings/actions";
 import { toast } from "sonner";
+
+function parseAvatarPosition(value: string | null | undefined): { x: number; y: number } {
+  if (!value || typeof value !== "string") return { x: 50, y: 50 };
+  const match = value.trim().match(/^(\d+)%\s+(\d+)%$/);
+  if (!match) return { x: 50, y: 50 };
+  return {
+    x: Math.min(100, Math.max(0, parseInt(match[1], 10))),
+    y: Math.min(100, Math.max(0, parseInt(match[2], 10))),
+  };
+}
 
 interface Profile {
   avatar_url?: string | null;
@@ -22,6 +33,9 @@ interface Profile {
   phone?: string | null;
   notifications_enabled?: boolean;
   newsletter_enabled?: boolean;
+  spinning_text_enabled?: boolean;
+  spinning_text_set?: string | null;
+  avatar_position?: string | null;
 }
 
 interface GlassProfileSettingsCardProps {
@@ -33,9 +47,16 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState(profile?.notifications_enabled ?? true);
   const [newsletter, setNewsletter] = useState(profile?.newsletter_enabled ?? false);
+  const [spinningTextEnabled, setSpinningTextEnabled] = useState(profile?.spinning_text_enabled ?? false);
+  const [spinningTextSet, setSpinningTextSet] = useState<string>(profile?.spinning_text_set ?? "set1");
   const [bio, setBio] = useState(profile?.bio || "");
   const [imagePreview, setImagePreview] = useState<string | null>(profile?.avatar_url || null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [avatarPosition, setAvatarPosition] = useState<{ x: number; y: number }>(() =>
+    parseAvatarPosition(profile?.avatar_position)
+  );
+  const [isDraggingAvatar, setIsDraggingAvatar] = useState(false);
+  const dragStartRef = useRef<{ x: number; y: number; startPos: { x: number; y: number } } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -67,9 +88,44 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
   const handleRemoveImage = () => {
     setImagePreview(null);
     setSelectedFile(null);
+    setAvatarPosition({ x: 50, y: 50 });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const avatarPositionStr = `${avatarPosition.x}% ${avatarPosition.y}%`;
+
+  const handleAvatarPointerDown = (e: React.PointerEvent) => {
+    if (!imagePreview) return;
+    e.preventDefault();
+    setIsDraggingAvatar(true);
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      startPos: { ...avatarPosition },
+    };
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const handleAvatarPointerMove = (e: React.PointerEvent) => {
+    if (!dragStartRef.current || !isDraggingAvatar) return;
+    const { x, y, startPos } = dragStartRef.current;
+    const deltaX = e.clientX - x;
+    const deltaY = e.clientY - y;
+    const sensitivity = 0.8;
+    setAvatarPosition({
+      x: Math.min(100, Math.max(0, startPos.x - deltaX * sensitivity)),
+      y: Math.min(100, Math.max(0, startPos.y - deltaY * sensitivity)),
+    });
+  };
+
+  const handleAvatarPointerUp = (e: React.PointerEvent) => {
+    if (dragStartRef.current) {
+      (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
+      dragStartRef.current = null;
+    }
+    setIsDraggingAvatar(false);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -82,6 +138,9 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
       // Agregar campos adicionales
       formData.set('notifications_enabled', notifications.toString());
       formData.set('newsletter_enabled', newsletter.toString());
+      formData.set('spinning_text_enabled', spinningTextEnabled.toString());
+      formData.set('spinning_text_set', spinningTextEnabled ? spinningTextSet : "");
+      formData.set('avatar_position', avatarPositionStr);
       formData.set('bio', bio);
       
       // Solo agregar el archivo si hay uno nuevo seleccionado
@@ -156,19 +215,35 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
         <div className="sm:col-span-2">
           <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/60 bg-background/40 p-6 backdrop-blur">
             <div className="relative">
-              <Avatar className="h-24 w-24 border border-border/60">
+              <div
+                className="relative h-24 w-24 rounded-full border border-border/60 overflow-hidden bg-muted"
+                role="img"
+                aria-label="Vista previa del avatar"
+                style={{ cursor: imagePreview ? (isDraggingAvatar ? "grabbing" : "grab") : undefined }}
+                onPointerDown={handleAvatarPointerDown}
+                onPointerMove={handleAvatarPointerMove}
+                onPointerUp={handleAvatarPointerUp}
+                onPointerLeave={() => {
+                  if (dragStartRef.current) {
+                    dragStartRef.current = null;
+                    setIsDraggingAvatar(false);
+                  }
+                }}
+              >
                 {imagePreview ? (
-                  <img 
-                    src={imagePreview} 
-                    alt="Avatar preview" 
-                    className="h-full w-full object-cover rounded-full"
+                  <img
+                    src={imagePreview}
+                    alt="Avatar preview"
+                    className="h-full w-full select-none object-cover object-center pointer-events-none rounded-full"
+                    style={{ objectPosition: avatarPositionStr }}
+                    draggable={false}
                   />
                 ) : (
                   <span className="flex h-full w-full items-center justify-center rounded-full bg-primary/20 text-lg font-semibold text-primary">
                     {getInitials()}
                   </span>
                 )}
-              </Avatar>
+              </div>
               {imagePreview && (
                 <button
                   type="button"
@@ -180,6 +255,11 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
                 </button>
               )}
             </div>
+            {imagePreview && (
+              <p className="text-xs text-muted-foreground text-center">
+                Arrastrá la imagen para centrarla. No se estirará al guardar.
+              </p>
+            )}
             <div className="text-center">
               <p className="text-sm font-medium text-foreground">
                 {profile?.full_name || profile?.username || 'Usuario'}
@@ -285,6 +365,42 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
             <p className="text-right text-xs text-muted-foreground">
               {bio.length}/160 caracteres
             </p>
+          </div>
+
+          <div className="rounded-2xl border border-border/60 bg-background/40 p-5 backdrop-blur">
+            <h2 className="text-sm font-medium text-foreground mb-1">
+              Texto giratorio (perfil público)
+            </h2>
+            <p className="mb-4 text-xs text-muted-foreground">
+              Mostrar un anillo de frases alrededor de tu avatar. Elegí un set de frases.
+            </p>
+            <div className="space-y-3">
+              <label className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
+                Mostrar texto giratorio
+                <Switch
+                  checked={spinningTextEnabled}
+                  onCheckedChange={setSpinningTextEnabled}
+                  disabled={isLoading}
+                />
+              </label>
+              {spinningTextEnabled && (
+                <div className="space-y-2">
+                  <Label className="text-xs">Frases</Label>
+                  <Select value={spinningTextSet} onValueChange={setSpinningTextSet} disabled={isLoading}>
+                    <SelectTrigger className="w-full rounded-xl border-border/60 bg-background/60">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(Object.keys(SPINNING_TEXT_SET_LABELS) as SpinningTextSetKey[]).map((key) => (
+                        <SelectItem key={key} value={key}>
+                          {SPINNING_TEXT_SET_LABELS[key]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-background/40 p-5 backdrop-blur">

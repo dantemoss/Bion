@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PublicBentoGrid } from "@/components/public-profile/public-bento-grid";
+import { ProfileAvatarWithSpinningText } from "@/components/public-profile/profile-avatar-with-spinning-text";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -91,14 +91,16 @@ export default async function PublicProfilePage({
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center py-16 px-4">
       
-      {/* HEADER DEL PERFIL */}
+      {/* HEADER DEL PERFIL: avatar con texto giratorio opcional */}
       <div className="flex flex-col items-center gap-4 mb-10 text-center animate-in fade-in zoom-in duration-500">
-        <Avatar className="w-24 h-24 border-2 border-zinc-800">
-          <AvatarImage src={profile.avatar_url || ""} />
-          <AvatarFallback className="text-2xl font-bold bg-zinc-800 text-zinc-400">
-            {profile.full_name?.[0] || "?"}
-          </AvatarFallback>
-        </Avatar>
+        <ProfileAvatarWithSpinningText
+          avatarUrl={profile.avatar_url}
+          fullName={profile.full_name}
+          username={username}
+          spinningTextEnabled={profile.spinning_text_enabled === true}
+          spinningTextSet={profile.spinning_text_set}
+          avatarPosition={profile.avatar_position}
+        />
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">{profile.full_name || username}</h1>
           <p className="text-zinc-500 text-sm font-mono">@{username}</p>

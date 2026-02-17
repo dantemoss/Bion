@@ -40,6 +40,9 @@ export interface Profile {
   layout: string | null;
   notifications_enabled: boolean;
   newsletter_enabled: boolean;
+  spinning_text_enabled: boolean;
+  spinning_text_set: string | null;
+  avatar_position: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -70,4 +73,7 @@ export interface ProfileFormData {
   bio?: string;
   notifications_enabled?: boolean;
   newsletter_enabled?: boolean;
+  spinning_text_enabled?: boolean;
+  spinning_text_set?: string | null;
+  avatar_position?: string | null;
 }

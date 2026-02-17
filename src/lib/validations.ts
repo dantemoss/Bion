@@ -266,6 +266,25 @@ export const profileSchema = z.object({
     .string()
     .transform((val) => val === "true")
     .pipe(z.boolean()),
+  spinning_text_enabled: z
+    .string()
+    .transform((val) => val === "true")
+    .pipe(z.boolean()),
+  spinning_text_set: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === "" || val == null ? null : val))
+    .refine((val) => val === null || val === "set1" || val === "set2", { message: "Set inválido" }),
+  avatar_position: z.preprocess(
+    (val) => (val === "" || val == null ? null : val),
+    z.union([
+      z.null(),
+      z.string()
+        .max(30)
+        .regex(/^\d+%\s+\d+%$/, { message: "Formato inválido (ej: 50% 50%)" }),
+    ])
+  ),
 })
 
 /**

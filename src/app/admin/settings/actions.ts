@@ -23,6 +23,9 @@ export async function updateProfile(formData: FormData) {
       bio: formData.get('bio') as string || '',
       notifications_enabled: formData.get('notifications_enabled') as string || 'false',
       newsletter_enabled: formData.get('newsletter_enabled') as string || 'false',
+      spinning_text_enabled: formData.get('spinning_text_enabled') as string || 'false',
+      spinning_text_set: (formData.get('spinning_text_set') as string) || null,
+      avatar_position: (formData.get('avatar_position') as string) || null,
     }
 
     // 3. Validar datos con Zod
@@ -114,6 +117,9 @@ export async function updateProfile(formData: FormData) {
       bio: validatedData.bio || null,
       notifications_enabled: validatedData.notifications_enabled,
       newsletter_enabled: validatedData.newsletter_enabled,
+      spinning_text_enabled: validatedData.spinning_text_enabled,
+      spinning_text_set: validatedData.spinning_text_set || null,
+      avatar_position: validatedData.avatar_position ?? null,
       updated_at: new Date().toISOString(),
     }
 

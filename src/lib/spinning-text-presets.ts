@@ -1,20 +1,40 @@
 /**
- * Presets para el texto giratorio del perfil público.
- * Tres frases separadas por • (obligatorio); el usuario elige el set desde Configuración.
+ * Texto giratorio: una palabra repetida 3 veces (estilo fashion/aesthetic).
+ * El usuario elige la palabra desde Configuración.
  */
-export const SPINNING_TEXT_PRESETS = {
-  set1: "aprende más • crece más • comparte más •",
-  set2: "learn more • earn more • grow more •",
-} as const
+export const SPINNING_TEXT_WORDS = [
+  "exclusive",
+  "aesthetic",
+  "fashion",
+  "premium",
+  "limited",
+  "rare",
+] as const;
 
-export type SpinningTextSetKey = keyof typeof SPINNING_TEXT_PRESETS
+export type SpinningTextWordKey = (typeof SPINNING_TEXT_WORDS)[number];
 
-export const SPINNING_TEXT_SET_LABELS: Record<SpinningTextSetKey, string> = {
-  set1: "Set 1 (español)",
-  set2: "Set 2 (inglés)",
-}
+export const SPINNING_TEXT_WORD_LABELS: Record<SpinningTextWordKey, string> = {
+  exclusive: "Exclusive",
+  aesthetic: "Aesthetic",
+  fashion: "Fashion",
+  premium: "Premium",
+  limited: "Limited",
+  rare: "Rare",
+};
 
-export function getSpinningTextContent(setKey: SpinningTextSetKey | null | undefined): string | null {
-  if (!setKey || !(setKey in SPINNING_TEXT_PRESETS)) return null
-  return SPINNING_TEXT_PRESETS[setKey as SpinningTextSetKey]
+/** Migración: valores antiguos set1/set2 → palabras nuevas */
+const LEGACY_MAP: Record<string, string> = {
+  set1: "exclusive",
+  set2: "aesthetic",
+};
+
+/** Devuelve la palabra repetida 3 veces con separador • para el anillo */
+export function getSpinningTextContent(
+  wordKey: SpinningTextWordKey | string | null | undefined
+): string | null {
+  if (!wordKey || typeof wordKey !== "string") return null;
+  const raw = wordKey.trim().toLowerCase();
+  if (!raw) return null;
+  const word = LEGACY_MAP[raw] ?? raw;
+  return `${word} • ${word} • ${word} •`;
 }

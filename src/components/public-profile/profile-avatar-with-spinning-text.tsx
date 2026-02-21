@@ -25,9 +25,7 @@ export function ProfileAvatarWithSpinningText({
   avatarPosition = "50% 50%",
   className,
 }: ProfileAvatarWithSpinningTextProps) {
-  const spinningContent = getSpinningTextContent(
-    spinningTextSet as "set1" | "set2" | null
-  );
+  const spinningContent = getSpinningTextContent(spinningTextSet);
 
   const showSpinningText = spinningTextEnabled && spinningContent;
 

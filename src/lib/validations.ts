@@ -275,7 +275,12 @@ export const profileSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val === "" || val == null ? null : val))
-    .refine((val) => val === null || val === "set1" || val === "set2", { message: "Set inválido" }),
+    .refine(
+      (val) =>
+        val === null ||
+        ["exclusive", "aesthetic", "fashion", "premium", "limited", "rare"].includes(val),
+      { message: "Palabra inválida" }
+    ),
   avatar_position: z.preprocess(
     (val) => (val === "" || val == null ? null : val),
     z.union([

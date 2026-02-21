@@ -54,16 +54,24 @@
   @keyframes spin-around {
   0% {
     transform: translateZ(0) rotate(0);
-    }
+  }
   15%, 35% {
     transform: translateZ(0) rotate(90deg);
-    }
+  }
   65%, 85% {
     transform: translateZ(0) rotate(270deg);
-    }
+  }
   100% {
     transform: translateZ(0) rotate(360deg);
-    }
+  }
+  }
+  @keyframes spin-circle {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
   }
 }
 
@@ -156,6 +164,16 @@
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+/* Rotación continua para el texto giratorio del perfil */
+@keyframes spin-circle {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

@@ -62,9 +62,9 @@ function AdminSidebarContent() {
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      {/* Logo: solo ícono cuando la sidebar está cerrada */}
-      <div className="flex items-center gap-3 mb-6 flex-shrink-0 overflow-hidden">
-        <img src="/logoBion.webp" alt="Bion" className="h-10 w-10 object-contain flex-shrink-0 rounded-md md:h-12 md:w-12" />
+      {/* Logo: mismo padding que los links para alineación */}
+      <div className="flex items-center gap-3 px-2 mb-5 flex-shrink-0 overflow-hidden">
+        <img src="/logoBion.webp" alt="Bion" className="h-14 w-14 object-contain flex-shrink-0 rounded-lg sm:h-16 sm:w-16" />
         <motion.span
           animate={{
             display: animate ? (open ? "inline-block" : "none") : "inline-block",

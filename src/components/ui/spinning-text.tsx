@@ -1,7 +1,6 @@
 "use client"
 
 import React, { ComponentPropsWithoutRef } from "react"
-import { motion, Transition, Variants } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
@@ -10,25 +9,14 @@ interface SpinningTextProps extends ComponentPropsWithoutRef<"div"> {
   duration?: number
   reverse?: boolean
   radius?: number
-  transition?: Transition
-  variants?: {
-    container?: Variants
-    item?: Variants
-  }
+  transition?: { duration?: number }
+  variants?: Record<string, unknown>
 }
 
-const BASE_TRANSITION: Transition = {
-  repeat: Infinity,
-  ease: "linear",
-}
-
-const BASE_ITEM_VARIANTS: Variants = {
-  hidden: {
-    opacity: 1,
-  },
-  visible: {
-    opacity: 1,
-  },
+/** Separa por " • " para que cada palabra/frase sea un bloque legible en el círculo */
+function getSegments(text: string): string[] {
+  const segments = text.split(/\s*•\s*/).filter(Boolean)
+  return segments.length > 0 ? segments : [text]
 }
 
 export function SpinningText({
@@ -37,83 +25,60 @@ export function SpinningText({
   reverse = false,
   radius = 5,
   transition,
-  variants,
   className,
   style,
+  ...props
 }: SpinningTextProps) {
-  if (typeof children !== "string" && !Array.isArray(children)) {
-    throw new Error("children must be a string or an array of strings")
-  }
+  const raw =
+    typeof children === "string"
+      ? children
+      : Array.isArray(children)
+        ? children.filter((c) => typeof c === "string").join("")
+        : ""
 
-  if (Array.isArray(children)) {
-    // Validate all elements are strings
-    if (!children.every((child) => typeof child === "string")) {
-      throw new Error("all elements in children array must be strings")
-    }
-    children = children.join("")
-  }
-
-  const letters = children.split("")
-  letters.push(" ")
-
-  const finalTransition: Transition = {
-    ...BASE_TRANSITION,
-    ...transition,
-    duration: (transition as { duration?: number })?.duration ?? duration,
-  }
-
-  const containerVariants: Variants = {
-    visible: { rotate: reverse ? -360 : 360 },
-    ...variants?.container,
-  }
-
-  const itemVariants: Variants = {
-    ...BASE_ITEM_VARIANTS,
-    ...variants?.item,
-  }
+  const segments = getSegments(raw)
+  const durationSec = transition?.duration ?? duration
 
   return (
-    <motion.div
+    <div
       className={cn("relative", className)}
       style={{
         ...style,
-      }}
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      transition={finalTransition}
+        animation: `spin-circle ${durationSec}s linear infinite`,
+        animationDirection: reverse ? "reverse" : "normal",
+      } as React.CSSProperties}
+      {...props}
     >
-      {letters.map((letter, index) => (
-        <motion.span
-          aria-hidden="true"
-          key={`${index}-${letter}`}
-          variants={itemVariants}
-          className="absolute top-1/2 left-1/2 inline-block origin-center"
-          style={
-            {
-              "--index": index,
-              "--total": letters.length,
+      {segments.map((segment, index) => {
+        const angle = (360 / segments.length) * index
+        return (
+          <span
+            aria-hidden="true"
+            key={`${index}-${segment}`}
+            className="absolute top-1/2 left-1/2 inline-block origin-center whitespace-nowrap"
+            style={{
               "--radius": radius,
               transform: `
                   translate(-50%, -50%)
-                  rotate(calc(360deg / var(--total) * var(--index)))
+                  rotate(${angle}deg)
                   translateY(calc(var(--radius, 5) * -1ch))
                 `,
-              transformOrigin: "center",
-            } as React.CSSProperties
-          }
-        >
-          <span
-            className="inline-block origin-center"
-            style={{
-              transform: `rotate(calc(-360deg / var(--total) * var(--index)))`,
-            }}
+              transformOrigin: "center center",
+            } as React.CSSProperties}
           >
-            {letter}
+            <span
+              className="inline-block origin-center"
+              style={{
+                transform: `rotate(${-angle}deg)`,
+                transformOrigin: "center center",
+              }}
+            >
+              {segment}
+            </span>
           </span>
-        </motion.span>
-      ))}
-      <span className="sr-only">{children}</span>
-    </motion.div>
+        )
+      })}
+      <span className="sr-only">{raw}</span>
+    </div>
   )
 }

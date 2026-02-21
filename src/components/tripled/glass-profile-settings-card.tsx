@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { motion, useReducedMotion } from "framer-motion";
 import { UploadCloud, Loader2, X } from "lucide-react";
-import { SPINNING_TEXT_SET_LABELS, type SpinningTextSetKey } from "@/lib/spinning-text-presets";
+import { SPINNING_TEXT_WORD_LABELS, type SpinningTextWordKey } from "@/lib/spinning-text-presets";
 import { FormEvent, useState, useRef, ChangeEvent } from "react";
 import { updateProfile } from "@/app/admin/settings/actions";
 import { toast } from "sonner";
@@ -48,7 +48,13 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
   const [notifications, setNotifications] = useState(profile?.notifications_enabled ?? true);
   const [newsletter, setNewsletter] = useState(profile?.newsletter_enabled ?? false);
   const [spinningTextEnabled, setSpinningTextEnabled] = useState(profile?.spinning_text_enabled ?? false);
-  const [spinningTextSet, setSpinningTextSet] = useState<string>(profile?.spinning_text_set ?? "set1");
+  const [spinningTextSet, setSpinningTextSet] = useState<string>(
+    profile?.spinning_text_set && ["exclusive", "aesthetic", "fashion", "premium", "limited", "rare"].includes(profile.spinning_text_set)
+      ? profile.spinning_text_set
+      : profile?.spinning_text_set === "set2"
+        ? "aesthetic"
+        : "exclusive"
+  );
   const [bio, setBio] = useState(profile?.bio || "");
   const [imagePreview, setImagePreview] = useState<string | null>(profile?.avatar_url || null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -372,7 +378,7 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
               Texto giratorio (perfil público)
             </h2>
             <p className="mb-4 text-xs text-muted-foreground">
-              Mostrar un anillo de frases alrededor de tu avatar. Elegí un set de frases.
+              Una palabra repetida alrededor de tu avatar (estilo aesthetic). Elegí la palabra.
             </p>
             <div className="space-y-3">
               <label className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
@@ -385,15 +391,15 @@ export function GlassProfileSettingsCard({ profile }: GlassProfileSettingsCardPr
               </label>
               {spinningTextEnabled && (
                 <div className="space-y-2">
-                  <Label className="text-xs">Frases</Label>
+                  <Label className="text-xs">Palabra</Label>
                   <Select value={spinningTextSet} onValueChange={setSpinningTextSet} disabled={isLoading}>
                     <SelectTrigger className="w-full rounded-xl border-border/60 bg-background/60">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {(Object.keys(SPINNING_TEXT_SET_LABELS) as SpinningTextSetKey[]).map((key) => (
+                      {(Object.keys(SPINNING_TEXT_WORD_LABELS) as SpinningTextWordKey[]).map((key) => (
                         <SelectItem key={key} value={key}>
-                          {SPINNING_TEXT_SET_LABELS[key]}
+                          {SPINNING_TEXT_WORD_LABELS[key]}
                         </SelectItem>
                       ))}
                     </SelectContent>

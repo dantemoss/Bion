@@ -7,6 +7,7 @@ import { MapPin, ExternalLink } from "lucide-react";
 import { detectPlatform } from "@/lib/platforms";
 import { TweetCard } from "@/components/ui/tweet-card";
 import { VideoBlockWithModal } from "@/components/public-profile/video-block-with-modal";
+import { AdultContentCard } from "@/components/public-profile/adult-content-card";
 
 interface PublicBentoGridProps {
   blocks: Block[];
@@ -212,6 +213,11 @@ export function PublicBentoGrid({ blocks }: PublicBentoGridProps) {
           // Map
           if (blockType === "map" || url.includes("maps.google") || url.includes("goo.gl/maps")) {
             return <MapCard key={block.id} block={block} />;
+          }
+
+          // OnlyFans / contenido +18 → disclaimer antes de abrir
+          if (blockType === "onlyfans" || url.includes("onlyfans.com")) {
+            return <AdultContentCard key={block.id} block={block} />;
           }
           
           // Default: Link estándar

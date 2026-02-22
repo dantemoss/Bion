@@ -15,9 +15,10 @@ interface SortableBlockProps {
   block: Block
   variant?: "dark" | "silver"
   onBlockClick?: (block: Block) => void
+  mutedIcons?: boolean
 }
 
-export function SortableBlock({ block, variant = "dark", onBlockClick }: SortableBlockProps) {
+export function SortableBlock({ block, variant = "dark", onBlockClick, mutedIcons = false }: SortableBlockProps) {
   const {
     attributes,
     listeners,
@@ -78,6 +79,7 @@ export function SortableBlock({ block, variant = "dark", onBlockClick }: Sortabl
           brandColor={brandColor || "#71717a"}
           isActive={block.is_active}
           isHighlighted={block.is_highlighted}
+          mutedIcons={mutedIcons}
           clicks={block.clicks || 0}
           url={block.url || undefined}
           onEdit={handleEdit}

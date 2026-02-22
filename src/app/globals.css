@@ -167,6 +167,15 @@
   }
 }
 
+/* Ocultar scrollbar manteniendo scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Rotación continua para el texto giratorio del perfil */
 @keyframes spin-circle {
   from {

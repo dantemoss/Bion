@@ -46,7 +46,7 @@ function SpotifyCard({ block }: { block: Block }) {
         "group relative row-span-2 flex flex-col overflow-hidden rounded-xl",
         "bg-background [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         "dark:bg-background dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] dark:[border:1px_solid_rgba(255,255,255,.1)]",
-        block.is_highlighted ? "md:col-span-2" : "col-span-1"
+        getLargeBlockSpan(!!block.is_highlighted)
       )}
     >
       <div className="absolute inset-0 p-2">
@@ -84,16 +84,18 @@ async function TwitterCard({ block }: { block: Block }) {
   return (
     <div
       className={cn(
-        "group relative row-span-2 flex flex-col overflow-hidden rounded-xl",
+        "group relative flex min-w-0 flex-col overflow-hidden rounded-xl",
         "bg-background [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         "dark:bg-background dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] dark:[border:1px_solid_rgba(255,255,255,.1)]",
-        block.is_highlighted ? "md:col-span-2 row-span-3" : "col-span-1"
+        "row-span-2",
+        "col-span-2 md:col-span-1",
+        block.is_highlighted && "md:col-span-2 md:row-span-3"
       )}
     >
-      <div className="h-full w-full overflow-hidden overscroll-none">
+      <div className="h-full min-w-0 flex-1 overflow-y-auto overscroll-contain">
         <TweetCard
           id={tweetId}
-          className="h-full w-full overflow-hidden"
+          className="h-full w-full min-w-0 max-w-none shrink-0"
         />
       </div>
     </div>
@@ -109,9 +111,7 @@ function MapCard({ block }: { block: Block }) {
     <BentoCard
       compact
       name={block.title || "Ubicación"}
-      className={cn(
-        block.is_highlighted ? "md:col-span-2" : "col-span-1"
-      )}
+      className={getLargeBlockSpan(!!block.is_highlighted)}
       background={
         <div className="absolute inset-0">
           {isGoogleMaps && block.url ? (
@@ -149,14 +149,14 @@ function DefaultLinkCard({ block }: { block: Block }) {
       compact
       name={block.title || "Enlace"}
       className={cn(
-        block.is_highlighted ? "md:col-span-2" : "col-span-1",
+        getStandardBlockSpan(!!block.is_highlighted),
         block.is_highlighted && "ring-2 ring-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.4)]"
       )}
       background={
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/50 via-zinc-900/50 to-black/50">
           {hasBrandIcon && (
-            <div className="absolute bottom-4 right-4 opacity-10">
-              <BrandIcon 
+            <div className="absolute bottom-4 right-4 hidden opacity-10 md:block">
+              <BrandIcon
                 platform={platform as any}
                 size={120}
                 className="text-white"
@@ -179,11 +179,21 @@ function DefaultLinkCard({ block }: { block: Block }) {
   );
 }
 
-// Componente principal
+/** Mobile: full width (col-span-2). Desktop: igual que antes (col-span-1, md:col-span-2 si destacado) */
+function getLargeBlockSpan(highlighted: boolean) {
+  return highlighted ? "col-span-2 md:col-span-2" : "col-span-2 md:col-span-1";
+}
+
+/** Mobile: half width (col-span-1). Desktop: igual que antes */
+function getStandardBlockSpan(highlighted: boolean) {
+  return highlighted ? "col-span-2 md:col-span-2" : "col-span-1";
+}
+
+// Componente principal - solo mobile usa 2 cols tipo widgets; desktop igual que antes
 export function PublicBentoGrid({ blocks }: PublicBentoGridProps) {
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <BentoGrid className="auto-rows-[11rem] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <BentoGrid className="grid-cols-2 gap-3 auto-rows-[9rem] md:gap-4 md:auto-rows-[11rem] lg:grid-cols-3">
         {/* Renderizar cada bloque según su tipo */}
         {blocks.map((block) => {
           const blockType = block.type.toLowerCase();

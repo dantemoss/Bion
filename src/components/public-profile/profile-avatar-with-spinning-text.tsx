@@ -1,8 +1,6 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { SpinningText } from "@/components/ui/spinning-text";
-import { getSpinningTextContent } from "@/lib/spinning-text-presets";
 import { cn } from "@/lib/utils";
 
 interface ProfileAvatarWithSpinningTextProps {
@@ -25,26 +23,11 @@ export function ProfileAvatarWithSpinningText({
   avatarPosition = "50% 50%",
   className,
 }: ProfileAvatarWithSpinningTextProps) {
-  const spinningContent = getSpinningTextContent(spinningTextSet);
-
-  const showSpinningText = spinningTextEnabled && spinningContent;
-
   return (
     <div className={cn("relative flex items-center justify-center", className)}>
       {/* Contenedor: texto visible en anillo alrededor del avatar, sin gap excesivo */}
       <div className="relative w-[160px] h-[160px] flex items-center justify-center">
-        {showSpinningText && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <SpinningText
-              radius={8}
-              duration={15}
-              reverse={false}
-              className="text-zinc-400 text-[11px] font-medium tracking-tight"
-            >
-              {spinningContent}
-            </SpinningText>
-          </div>
-        )}
+        {/* SpinningText suspendido de momento */}
         <Avatar className="w-24 h-24 border-2 border-zinc-800 relative z-10 bg-zinc-900">
           <AvatarImage src={avatarUrl || ""} className="object-cover" style={{ objectPosition: avatarPosition || "50% 50%" }} />
           <AvatarFallback className="text-2xl font-bold bg-zinc-800 text-zinc-400">

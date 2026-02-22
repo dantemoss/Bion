@@ -76,10 +76,10 @@ export function VideoBlockWithModal({ block }: VideoBlockWithModalProps) {
     return (
       <BentoCard
         name={block.title || "Video"}
-        className={cn(
-          "row-span-2",
-          block.is_highlighted ? "md:col-span-2" : "col-span-1"
-        )}
+      className={cn(
+        "row-span-2 md:row-span-3",
+        block.is_highlighted ? "col-span-2 md:col-span-2" : "col-span-2 md:col-span-1"
+      )}
         background={
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-zinc-900/50 to-transparent" />
         }
@@ -122,9 +122,8 @@ export function VideoBlockWithModal({ block }: VideoBlockWithModalProps) {
   return (
     <div
       className={cn(
-        "min-h-0",
-        "row-span-2",
-        block.is_highlighted ? "md:col-span-2 md:row-span-3" : "col-span-1"
+        "min-h-0 col-span-2 row-span-2",
+        block.is_highlighted ? "md:col-span-2 md:row-span-3" : "md:col-span-1"
       )}
     >
       <HeroVideoDialog

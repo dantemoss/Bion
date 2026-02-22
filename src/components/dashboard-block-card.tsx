@@ -19,6 +19,8 @@ interface DashboardBlockCardProps {
   onManage?: () => void
   onEdit?: () => void
   onDrag?: () => void
+  /** Iconos más pequeños y menos intensos (para sección Links) */
+  mutedIcons?: boolean
 }
 
 export function DashboardBlockCard({
@@ -35,6 +37,7 @@ export function DashboardBlockCard({
   onManage,
   onEdit,
   onDrag,
+  mutedIcons = false,
 }: DashboardBlockCardProps) {
   // Variantes de estilo
   const variantStyles = {
@@ -54,8 +57,12 @@ export function DashboardBlockCard({
 
   // Logos monocromáticos por variante: Dark → blanco metálico, Silver → negro metálico
   const logoMonochromeClasses = {
-    dark: "brightness-0 invert opacity-95 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
-    silver: "brightness-0 opacity-90 drop-shadow-[0_0_6px_rgba(0,0,0,0.3)]",
+    dark: mutedIcons
+      ? "brightness-0 invert opacity-55 drop-shadow-[0_0_4px_rgba(255,255,255,0.2)]"
+      : "brightness-0 invert opacity-95 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
+    silver: mutedIcons
+      ? "brightness-0 opacity-65 drop-shadow-[0_0_4px_rgba(0,0,0,0.2)]"
+      : "brightness-0 opacity-90 drop-shadow-[0_0_6px_rgba(0,0,0,0.3)]",
   }
 
   return (
@@ -226,7 +233,8 @@ export function DashboardBlockCard({
         {/* Glow sutil según variante (blanco en dark, negro en silver) */}
         <div
           className={cn(
-            "absolute inset-0 w-24 h-24 rounded-full blur-3xl opacity-15 group-hover:opacity-25 transition-opacity duration-300",
+            "absolute inset-0 rounded-full blur-3xl opacity-15 group-hover:opacity-25 transition-opacity duration-300",
+            mutedIcons ? "w-16 h-16" : "w-24 h-24",
             variant === "dark" && "bg-white",
             variant === "silver" && "bg-zinc-900"
           )}
@@ -235,7 +243,8 @@ export function DashboardBlockCard({
         {/* Logo monocromático: Dark = blanco metálico, Silver = negro metálico */}
         <div
           className={cn(
-            "relative w-32 h-32 flex items-center justify-center transition-transform duration-300 group-hover:scale-105",
+            "relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105",
+            mutedIcons ? "w-20 h-20" : "w-32 h-32",
             logoMonochromeClasses[variant]
           )}
         >

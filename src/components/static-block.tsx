@@ -9,9 +9,10 @@ interface StaticBlockProps {
   block: Block
   variant?: "dark" | "silver"
   onBlockClick?: (block: Block) => void
+  mutedIcons?: boolean
 }
 
-export function StaticBlock({ block, variant = "dark", onBlockClick }: StaticBlockProps) {
+export function StaticBlock({ block, variant = "dark", onBlockClick, mutedIcons = false }: StaticBlockProps) {
   const platform = block.url ? (detectPlatform(block.url) as Platform) : "link"
   const config = getPlatformConfig(platform)
   
@@ -46,6 +47,7 @@ export function StaticBlock({ block, variant = "dark", onBlockClick }: StaticBlo
       clicks={block.clicks || 0}
       url={block.url || undefined}
       variant={variant}
+      mutedIcons={mutedIcons}
       className="h-[180px]"
     />
     </div>

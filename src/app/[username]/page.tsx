@@ -89,7 +89,7 @@ export default async function PublicProfilePage({
   const activeBlocks = blocks?.filter(b => b.is_active !== false) || []
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center py-16 px-4">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center py-12 sm:py-16 px-4 sm:px-6">
       
       {/* HEADER DEL PERFIL: avatar con texto giratorio opcional */}
       <div className="flex flex-col items-center gap-4 mb-10 text-center animate-in fade-in zoom-in duration-500">

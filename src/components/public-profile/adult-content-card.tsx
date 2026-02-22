@@ -49,10 +49,10 @@ export function AdultContentCard({ block }: AdultContentCardProps) {
           }
         }}
         className={cn(
-          "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl cursor-pointer",
+          "group relative flex flex-col justify-between overflow-hidden rounded-xl cursor-pointer",
           "bg-background [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
           "dark:bg-background transform-gpu dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] dark:[border:1px_solid_rgba(255,255,255,.1)]",
-          block.is_highlighted ? "md:col-span-2" : "col-span-1",
+          block.is_highlighted ? "col-span-2 md:col-span-2" : "col-span-2 md:col-span-1",
           block.is_highlighted && "ring-2 ring-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.4)]"
         )}
         aria-label={`Abrir ${block.title || "enlace"}`}
@@ -60,7 +60,7 @@ export function AdultContentCard({ block }: AdultContentCardProps) {
         <div className="flex-1 min-h-0">
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/50 via-zinc-900/50 to-black/50">
             {hasBrandIcon && (
-              <div className="absolute bottom-4 right-4 opacity-10">
+              <div className="absolute bottom-4 right-4 hidden opacity-10 md:block">
                 <BrandIcon platform={platform as any} size={120} className="text-white" />
               </div>
             )}

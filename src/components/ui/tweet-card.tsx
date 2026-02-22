@@ -95,8 +95,8 @@ export const TweetNotFound = ({
 )
 
 export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
-  <div className="flex flex-row items-start justify-between tracking-normal">
-    <div className="flex items-center space-x-3">
+  <div className="flex min-w-0 flex-row items-start justify-between gap-2 tracking-normal">
+    <div className="flex min-w-0 flex-1 items-center space-x-3 overflow-hidden">
       <a
         href={tweet.user.url}
         target="_blank"
@@ -112,34 +112,32 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
           className="border-border/50 overflow-hidden rounded-full border"
         />
       </a>
-      <div className="flex flex-col gap-0.5">
+      <div className="min-w-0 flex-1 overflow-hidden">
         <a
           href={tweet.user.url}
           target="_blank"
           rel="noreferrer"
-          className="text-foreground flex items-center font-medium whitespace-nowrap transition-opacity hover:opacity-80"
+          className="text-foreground flex items-center gap-1 truncate font-medium transition-opacity hover:opacity-80"
         >
-          {truncate(tweet.user.name, 20)}
+          <span className="truncate">{truncate(tweet.user.name, 20)}</span>
           {tweet.user.verified ||
             (tweet.user.is_blue_verified && (
-              <Verified className="ml-1 inline size-4 text-blue-500" />
+              <Verified className="shrink-0 size-4 text-blue-500" />
             ))}
         </a>
-        <div className="flex items-center space-x-1">
-          <a
-            href={tweet.user.url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-          >
-            @{truncate(tweet.user.screen_name, 16)}
-          </a>
-        </div>
+        <a
+          href={tweet.user.url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-muted-foreground hover:text-foreground block truncate text-sm transition-colors"
+        >
+          @{truncate(tweet.user.screen_name, 16)}
+        </a>
       </div>
     </div>
-    <a href={tweet.url} target="_blank" rel="noreferrer">
+    <a href={tweet.url} target="_blank" rel="noreferrer" className="shrink-0">
       <span className="sr-only">Link to tweet</span>
-      <Twitter className="text-muted-foreground hover:text-foreground size-5 items-start transition-all ease-in-out hover:scale-105" />
+      <Twitter className="text-muted-foreground hover:text-foreground size-5 transition-all ease-in-out hover:scale-105" />
     </a>
   </div>
 )
@@ -239,7 +237,7 @@ export const MagicTweet = ({
   return (
     <div
       className={cn(
-        "relative flex h-fit w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border p-5",
+        "relative flex h-fit min-w-0 w-full max-w-lg flex-col gap-4 overflow-hidden rounded-xl border p-5",
         className
       )}
       {...props}

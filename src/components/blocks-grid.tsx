@@ -28,9 +28,13 @@ interface BlocksGridProps {
   initialBlocks: Block[]
   cardVariant?: "dark" | "silver"
   onBlockClick?: (block: Block) => void
+  /** Callback cuando el orden de bloques cambia (ej. tras drag & drop) */
+  onBlocksChange?: (blocks: Block[]) => void
+  /** Iconos más pequeños y menos intensos (para sección Links) */
+  mutedIcons?: boolean
 }
 
-export function BlocksGrid({ initialBlocks, cardVariant = "dark", onBlockClick }: BlocksGridProps) {
+export function BlocksGrid({ initialBlocks, cardVariant = "dark", onBlockClick, onBlocksChange, mutedIcons = false }: BlocksGridProps) {
   const [blocks, setBlocks] = useState(initialBlocks)
   const [isMounted, setIsMounted] = useState(false)
 
@@ -64,6 +68,7 @@ export function BlocksGrid({ initialBlocks, cardVariant = "dark", onBlockClick }
 
       const newBlocks = arrayMove(blocks, oldIndex, newIndex)
       setBlocks(newBlocks)
+      onBlocksChange?.(newBlocks)
 
       // Guardar el nuevo orden en la base de datos
       const orderedIds = newBlocks.map((block) => block.id)
@@ -103,7 +108,7 @@ export function BlocksGrid({ initialBlocks, cardVariant = "dark", onBlockClick }
               !block.is_active && "opacity-50 grayscale"
             )}
           >
-            <StaticBlock block={block} variant={cardVariant} onBlockClick={onBlockClick} />
+            <StaticBlock block={block} variant={cardVariant} onBlockClick={onBlockClick} mutedIcons={mutedIcons} />
           </div>
         ))}
       </div>
@@ -128,7 +133,7 @@ export function BlocksGrid({ initialBlocks, cardVariant = "dark", onBlockClick }
                 !block.is_active && "opacity-50 grayscale"
               )}
             >
-              <SortableBlock block={block} variant={cardVariant} onBlockClick={onBlockClick} />
+              <SortableBlock block={block} variant={cardVariant} onBlockClick={onBlockClick} mutedIcons={mutedIcons} />
             </div>
           ))}
         </div>

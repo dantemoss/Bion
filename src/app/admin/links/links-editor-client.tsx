@@ -55,7 +55,7 @@ export function LinksEditorClient({ initialBlocks }: LinksEditorClientProps) {
         <div className="sticky top-4 flex justify-center">
           <div className="w-full max-w-[360px]">
             <Iphone>
-              <div className="w-full h-full overflow-y-auto overscroll-contain scrollbar-hide p-4 pt-8 pb-12 bg-zinc-950">
+              <div className="w-full h-full overflow-y-auto overscroll-contain scrollbar-hide p-4 pt-20 pb-12 bg-zinc-950">
                 <LinksMobilePreview blocks={blocks} />
               </div>
             </Iphone>

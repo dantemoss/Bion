@@ -148,12 +148,26 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
   body {
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Aplicar Geist Sans globalmente */
-  h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select, label {
+  /* Sistema Tipográfico Premium - Dark Mode */
+  h1, h2, h3, h4 {
+    @apply tracking-tight text-zinc-100 font-medium;
+  }
+
+  h1 {
+    @apply tracking-tighter;
+  }
+
+  p {
+    @apply leading-relaxed text-zinc-400 font-normal;
+  }
+
+  /* Aplicar Geist Sans globalmente a elementos de texto */
+  span, div, a, button, input, textarea, select, label {
     @apply font-sans;
   }
 }
@@ -183,14 +197,5 @@
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }

@@ -49,7 +49,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <header className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-50">
           <div className="px-6 h-16 flex justify-between items-center">
             <div className="flex items-center gap-2 lg:hidden">
-              <img src="/logoBion.webp" alt="Bion" className="h-6 w-6 object-contain rounded-md" />
+              <img src="/logo-bion.svg" alt="Bion" className="h-6 w-6 object-contain" />
               <h1 className="font-bold text-lg tracking-tight">Bion</h1>
             </div>
 

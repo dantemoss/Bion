@@ -64,7 +64,11 @@ function AdminSidebarContent() {
     <div className="flex flex-col flex-1 min-h-0">
       {/* Logo: mismo padding que los links para alineación */}
       <div className="flex items-center gap-3 px-2 mb-5 flex-shrink-0 overflow-hidden">
-        <img src="/logoBion.webp" alt="Bion" className="h-14 w-14 object-contain flex-shrink-0 rounded-lg sm:h-16 sm:w-16" />
+        <img
+          src="/logo-bion.svg"
+          alt="Bion"
+          className="h-12 w-12 object-contain flex-shrink-0 sm:h-14 sm:w-14"
+        />
         <motion.span
           animate={{
             display: animate ? (open ? "inline-block" : "none") : "inline-block",
